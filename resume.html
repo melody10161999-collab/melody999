@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>妍究所｜我的履歷</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 35px 20px 60px;
+            background: #fffaf4;
+            color: #68594f;
+            font-family: "Microsoft JhengHei", sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            color: #b97889;
+            font-size: 32px;
+            margin: 10px 0;
+        }
+
+        .subtitle {
+            color: #92887d;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .resume-viewer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            max-width: 1050px;
+            margin: auto;
+        }
+
+        .resume-photo {
+            width: min(100%, 700px);
+            min-width: 0;
+        }
+
+        .resume-photo img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+            box-shadow: 0 12px 35px #80605a25;
+            background: white;
+        }
+
+        .arrow {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            border: none;
+            border-radius: 50%;
+            background: #f4cbd5;
+            color: #84546b;
+            font-size: 28px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .arrow:hover {
+            background: #e8aaba;
+            transform: scale(1.08);
+        }
+
+        .page-number {
+            margin: 25px 0;
+            color: #a47283;
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 22px;
+            background: #ffe8ca;
+            border-radius: 30px;
+            text-decoration: none;
+            color: #805b62;
+        }
+
+        @media (max-width: 600px) {
+            .resume-viewer {
+                gap: 5px;
+            }
+
+            .arrow {
+                width: 35px;
+                height: 35px;
+                font-size: 22px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>MY RESUME ♡</h1>
+    <p class="subtitle">
+        每一段經歷，都是成長路上珍貴的小篇章。
+    </p>
+
+    <div class="resume-viewer">
+
+        <button class="arrow" id="prev"
+                aria-label="上一頁">‹</button>
+
+        <div class="resume-photo">
+            <img id="resumeImage"
+                 src="./photo/1.png"
+                 alt="履歷第1頁">
+        </div>
+
+        <button class="arrow" id="next"
+                aria-label="下一頁">›</button>
+
+    </div>
+
+    <div class="page-number" id="pageNumber">
+        1 / 4
+    </div>
+
+    <a href="./index.html" class="back-link">
+        ← 返回妍究所
+    </a>
+
+    <script>
+        // 在這裡新增或修改履歷圖片
+        const pages = [
+            "./photo/1.png",
+            "./photo/2.png",
+            "./photo/3.png",
+            "./photo/4.png"
+        ];
+
+        let currentPage = 0;
+
+        const resumeImage =
+            document.getElementById("resumeImage");
+
+        const pageNumber =
+            document.getElementById("pageNumber");
+
+        function showPage() {
+            resumeImage.src = pages[currentPage];
+
+            resumeImage.alt =
+                "履歷第" + (currentPage + 1) + "頁";
+
+            pageNumber.textContent =
+                (currentPage + 1) + " / " + pages.length;
+        }
+
+        document.getElementById("prev")
+            .addEventListener("click", function() {
+                currentPage =
+                    (currentPage - 1 + pages.length)
+                    % pages.length;
+
+                showPage();
+            });
+
+        document.getElementById("next")
+            .addEventListener("click", function() {
+                currentPage =
+                    (currentPage + 1) % pages.length;
+
+                showPage();
+            });
+
+        // 鍵盤左右方向鍵也能切換
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "ArrowLeft") {
+                document.getElementById("prev").click();
+            }
+
+            if (e.key === "ArrowRight") {
+                document.getElementById("next").click();
+            }
+        });
+
+        // 手機滑動切換
+        let touchStartX = 0;
+
+        resumeImage.addEventListener(
+            "touchstart",
+            function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            },
+            { passive: true }
+        );
+
+        resumeImage.addEventListener(
+            "touchend",
+            function(e) {
+                const difference =
+                    e.changedTouches[0].screenX
+                    - touchStartX;
+
+                if (difference > 50) {
+                    document.getElementById("prev").click();
+                }
+
+                if (difference < -50) {
+                    document.getElementById("next").click();
+                }
+            },
+            { passive: true }
+        );
+
+        showPage();
+    </script>
+
+</body>
+</html>
